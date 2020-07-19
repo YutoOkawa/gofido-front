@@ -7,7 +7,7 @@
         <button @click="atteOp(userid, displayName, baseURL)">登録開始</button>
         <p v-if="registered">{{ attestation }}</p>
       </div>
-      <p><textarea v-model="attestation" cols="120" rows="10" disabled></textarea></p>
+      <p><textarea v-model="display_attestation" cols="120" rows="10" disabled></textarea></p>
     </div>
 </template>
 
@@ -25,6 +25,7 @@ export default {
       text: 'Test Message',
       baseURL: 'localhost',
       attestation: null,
+      display_attestation: null,
       attestation_encode: {
         user: {}
       },
@@ -34,8 +35,16 @@ export default {
   methods: {
     async atteOp (username, displayName, baseURL) {
       var attestationResponse  = await Methods.attestationOptions(username, displayName, baseURL)
-      this.attestation = JSON.stringify(attestationResponse.data)
-      console.log(this.attestation);
+      this.attestation = attestationResponse.data
+      this.display_attestation = JSON.stringify(attestationResponse.data)
+      console.log(this.display_attestation);
+      this.attestation.pubKeyCredParams = []
+      this.attestation.pubKeyCredParams.type = "public-key"
+      this.attestation.pubKeyCredParams.alg = -7
+      this.attestation.challenge = Methods.toBufferBase64url(this.attestation.challenge)
+      this.attestation.user.id = Methods.toBufferBase64url(this.attestation.user.id)
+      console.log(this.attestation)
+      await navigator.credentials.create({publicKey: this.attestation})
       // this.attestation = await this.attestation.data
       // if (this.attestation.status === 'failed') {
       //   alert(this.attestation.message)
