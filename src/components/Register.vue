@@ -26,8 +26,9 @@ export default {
       baseURL: 'localhost',
       attestation: null,
       display_attestation: null,
-      attestation_encode: {
-        user: {}
+      create: null,
+      response_create: {
+        response: {}
       },
       registered: false
     }
@@ -44,23 +45,14 @@ export default {
       this.attestation.challenge = Methods.toBufferBase64url(this.attestation.challenge)
       this.attestation.user.id = Methods.toBufferBase64url(this.attestation.user.id)
       console.log(this.attestation)
-      await navigator.credentials.create({publicKey: this.attestation})
-      // this.attestation = await this.attestation.data
-      // if (this.attestation.status === 'failed') {
-      //   alert(this.attestation.message)
-      // } else {
-      //   this.registered = true
-      //   // console.log(this.attestation);
-      //   this.attestation_encode.challenge = await this.attestation.challenge
-      //   this.attestation_encode.id = await this.attestation.user.id
-      //   // console.log(this.attestation_encode);
-      //   this.attestation_encode.challenge = await Methods.toBufferBase64url(this.attestation_encode.challenge)
-      //   this.attestation_encode.id = await Methods.toBufferBase64url(this.attestation_encode.id)
-      //   this.attestation.challenge = await Methods.toArrayBuffer(this.attestation.challenge)
-      //   this.attestation.user.id = await Methods.toArrayBuffer(this.attestation.user.id)
-      //   // console.log(this.attestation)
-      //   this.atteRe(baseURL)
-      // }
+      this.create = await navigator.credentials.create({publicKey: this.attestation})
+      console.log(this.create)
+      this.response_create.id = this.create.id
+      this.response_create.rawId = Methods.encodeBase64url(this.create.rawId)
+      this.response_create.response.attestationObject = Methods.encodeBase64url(this.create.response.attestationObject)
+      this.response_create.response.clientDataJSON = Methods.encodeBase64url(this.create.response.clientDataJSON)
+      this.response_create.type = this.create.type
+      console.log(this.response_create)
     },
     async atteRe (baseURL) {
       if (this.attestation != null) {
