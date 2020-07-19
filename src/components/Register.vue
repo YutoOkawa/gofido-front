@@ -2,10 +2,12 @@
     <div class="register">
       <h1>{{ msg }} </h1>
       <input v-model="userid" placeholder="userid">
+      <input v-model="displayName" placeholder="displayName">
       <div class="register_method">
-        <button @click="atteOp(userid, baseURL)">登録開始</button>
+        <button @click="atteOp(userid, displayName, baseURL)">登録開始</button>
         <p v-if="registered">{{ attestation }}</p>
       </div>
+      <p><textarea v-model="attestation" cols="120" rows="10" disabled></textarea></p>
     </div>
 </template>
 
@@ -19,8 +21,9 @@ export default {
   data () {
     return {
       userid: 'test',
+      displayName: 'test',
       text: 'Test Message',
-      baseURL: 'localhost:8080',
+      baseURL: 'localhost',
       attestation: null,
       attestation_encode: {
         user: {}
@@ -29,24 +32,26 @@ export default {
     }
   },
   methods: {
-    async atteOp (username, baseURL) {
-    //   this.attestation = await Methods.attestationOptions(username, attributes, baseURL)
-      this.attestation = await this.attestation.data
-      if (this.attestation.status === 'failed') {
-        alert(this.attestation.message)
-      } else {
-        this.registered = true
-        // console.log(this.attestation);
-        this.attestation_encode.challenge = await this.attestation.challenge
-        this.attestation_encode.id = await this.attestation.user.id
-        // console.log(this.attestation_encode);
-        this.attestation_encode.challenge = await Methods.toBufferBase64url(this.attestation_encode.challenge)
-        this.attestation_encode.id = await Methods.toBufferBase64url(this.attestation_encode.id)
-        this.attestation.challenge = await Methods.toArrayBuffer(this.attestation.challenge)
-        this.attestation.user.id = await Methods.toArrayBuffer(this.attestation.user.id)
-        // console.log(this.attestation)
-        this.atteRe(baseURL)
-      }
+    async atteOp (username, displayName, baseURL) {
+      var attestationResponse  = await Methods.attestationOptions(username, displayName, baseURL)
+      this.attestation = JSON.stringify(attestationResponse.data)
+      console.log(this.attestation);
+      // this.attestation = await this.attestation.data
+      // if (this.attestation.status === 'failed') {
+      //   alert(this.attestation.message)
+      // } else {
+      //   this.registered = true
+      //   // console.log(this.attestation);
+      //   this.attestation_encode.challenge = await this.attestation.challenge
+      //   this.attestation_encode.id = await this.attestation.user.id
+      //   // console.log(this.attestation_encode);
+      //   this.attestation_encode.challenge = await Methods.toBufferBase64url(this.attestation_encode.challenge)
+      //   this.attestation_encode.id = await Methods.toBufferBase64url(this.attestation_encode.id)
+      //   this.attestation.challenge = await Methods.toArrayBuffer(this.attestation.challenge)
+      //   this.attestation.user.id = await Methods.toArrayBuffer(this.attestation.user.id)
+      //   // console.log(this.attestation)
+      //   this.atteRe(baseURL)
+      // }
     },
     async atteRe (baseURL) {
       if (this.attestation != null) {
