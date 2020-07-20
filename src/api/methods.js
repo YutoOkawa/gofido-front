@@ -12,6 +12,14 @@ export default {
         }
         return Api(baseURL).post('/attestation/options', param)
     },
+    attestationResult (create, username, FIDO_URL) {
+        const baseURL = 'https://' + FIDO_URL + ':8080'
+        const param = {
+            username: username,
+            create: create
+        }
+        return Api(baseURL).post('/attestation/result', param)
+    },
     testPosting (text) {
         const baseURL = FIDO_SERVER
         const item = { text: text }

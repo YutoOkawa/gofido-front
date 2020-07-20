@@ -53,21 +53,10 @@ export default {
       this.response_create.response.clientDataJSON = Methods.encodeBase64url(this.create.response.clientDataJSON)
       this.response_create.type = this.create.type
       console.log(this.response_create)
+      this.atteRe(this.response_create,this.userid, this.baseURL)
     },
-    async atteRe (baseURL) {
-      if (this.attestation != null) {
-        var response = await Methods.abs_navigator_credentials_create(this.attestation, this.userid, baseURL)
-        response = response.data
-        // console.log(response)
-      } else {
-        console.error('登録準備ができていません。')
-        return
-      }
-      if (!response) {
-        console.error('正しいレスポンスが返ってきていません。')
-        return
-      }
-      var result = await Methods.attestationResult(response, this.userid, baseURL)
+    async atteRe (response_create, userid, baseURL) {
+      var result = await Methods.attestationResult(response_create, userid, baseURL)
       result = result.data
       if (result.status === 'ok') {
         alert(result.message)
