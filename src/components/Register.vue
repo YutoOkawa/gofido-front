@@ -58,12 +58,8 @@ export default {
     async atteRe (response_create, userid, baseURL) {
       var result = await Methods.attestationResult(response_create, userid, baseURL)
       result = result.data
-      if (result.status === 'ok') {
-        alert(result.message)
-      } else if (result.status === 'failed') {
-        alert(result.message)
-        console.log('登録失敗...')
-      }
+      console.log(result)
+      alert(result.message)
     }
   }
 }
