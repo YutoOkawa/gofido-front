@@ -20,6 +20,21 @@ export default {
         }
         return Api(baseURL).post('/attestation/result', param)
     },
+    assertionOptions (username, FIDO_URL) {
+        const baseURL = 'https://' + FIDO_URL + ':8080'
+        const param = {
+            username : username
+        }
+        return Api(baseURL).post('/assertion/options', param)
+    },
+    assertionResult (get, username, FIDO_URL) {
+        const baseURL = 'https://' + FIDO_URL + ':8080'
+        const param = {
+          username: username,
+          get : get
+        }
+        return Api(baseURL).post('/assertion/result', param)
+    },
     testPosting (text) {
         const baseURL = FIDO_SERVER
         const item = { text: text }

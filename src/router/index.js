@@ -22,6 +22,11 @@ Vue.use(VueRouter)
     path: '/register',
     name: 'Register',
     component: () => import('../views/RegisterPage')
+  },
+  {
+    path: '/auth',
+    name: 'Authenticate',
+    component: () => import('../views/AuthPage')
   }
 ]
 
